@@ -1,7 +1,5 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Wallet, LogOut, ArrowUpDown } from "lucide-react"
 import { SoundControlPanel } from "./sound-control-panel"
 import { useWallet } from "@solana/wallet-adapter-react"
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui"
@@ -9,7 +7,6 @@ import { WalletMultiButton } from "@solana/wallet-adapter-react-ui"
 interface LuxuryHeaderProps {
   balance: number
   solBalance: number
-  onSwapClick: () => void
   isDemo: boolean
   // Sound control props
   musicEnabled: boolean
@@ -23,7 +20,6 @@ interface LuxuryHeaderProps {
 export function LuxuryHeader({
   balance,
   solBalance,
-  onSwapClick,
   isDemo,
   musicEnabled,
   soundEffectsEnabled,
@@ -33,7 +29,7 @@ export function LuxuryHeader({
   onChangeTrack,
 }: LuxuryHeaderProps) {
   const currentBalance = isDemo ? balance : solBalance
-  const {publicKey, connected, disconnect } = useWallet();
+  const { publicKey, connected } = useWallet()
 
   return (
     <header className="relative bg-black border-b border-gray-700/50 backdrop-blur-xl py-3 px-4 z-50">
@@ -58,17 +54,6 @@ export function LuxuryHeader({
               <div className="text-xs text-gray-400">{isDemo ? "DEMO BJ" : "BJ COIN"}</div>
             </div>
           </div>
-
-          {/* Swap Button */}
-          <Button
-            onClick={onSwapClick}
-            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white font-semibold px-4 py-2 rounded-lg border border-purple-500/50 transition-all duration-300 h-12"
-          >
-            <div className="flex items-center gap-2">
-              <ArrowUpDown className="w-4 h-4" />
-              <span className="hidden md:inline">Swap</span>
-            </div>
-          </Button>
 
           {/* Sound Control Panel */}
           <div className="h-12 flex items-center">

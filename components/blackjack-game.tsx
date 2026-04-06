@@ -5,7 +5,6 @@ import { AnimatedHomepage } from "./animated-homepage"
 import { LuxuryHeader } from "./luxury-header"
 import { PremiumGameTable } from "./premium-game-table"
 import { PremiumBettingPanel } from "./premium-betting-panel"
-import { JupiterSwapModal } from "./jupiter-swap-modal"
 import { SoundManager } from "./sound-manager"
 import type { Card, GameState, SplitHand } from "@/types/game"
 import { createDeck, shuffleDeck, calculateHandValue, dealCard, generateSeed, createHash } from "@/lib/game-logic"
@@ -27,9 +26,6 @@ import { luckyCasinoAPI } from "../lib/api";
 import { useAllowDenyLists } from "../hooks/useAllowDenyLists";
 import { useDefaultChain } from "../hooks/useDefaultChain";
 import { calculateFee } from "../utils/fee";
-import { darkTheme } from "../themes/dark";
-import { Dialog, DialogContent } from "./ui/dialog";
-import "@jup-ag/terminal/css";
 
 interface BlackjackGameProps {
   onBack?: () => void;
@@ -89,8 +85,6 @@ export function BlackjackGame({ onBack }: BlackjackGameProps = {}) {
 
   const { publicKey, connected, connect, disconnect, connecting, wallet, signTransaction } = useWallet();
 
-  const [showSwapModal, setShowSwapModal] = useState(false)
-
   // LiFiWidget config
   const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
   const allowDenyLists = useAllowDenyLists(searchParams);
@@ -110,17 +104,6 @@ export function BlackjackGame({ onBack }: BlackjackGameProps = {}) {
     }))
     setChipStacks([])
   }
-  useEffect(() => {
-    if (showSwapModal) {
-      import("@jup-ag/terminal").then((mod) => {
-        const { init } = mod;
-        init({
-          displayMode: "integrated",
-          integratedTargetId: "jupiter-terminal",
-        });
-      });
-    }
-  }, [showSwapModal]);
   useEffect(() => {
     if (connected) {
       handleWalletConnect(wallet?.adapter.name || "")
@@ -292,12 +275,18 @@ export function BlackjackGame({ onBack }: BlackjackGameProps = {}) {
   }
 
   const handleWalletDisconnect = () => {
-    setGameStarted(false) // Return to homepage
-    setSolBalance(10000) // Reset to $1000
-    setGameHistory([]) // Clear history
-    setWinStreak(0) // Reset streak
+    // When embedded in Landing, exit to the current first page (Hero) instead of
+    // the legacy AnimatedHomepage interstitial (gameStarted === false).
+    if (onBack) {
+      onBack()
+      return
+    }
 
-    // Reset game state to initial
+    setGameStarted(false)
+    setSolBalance(10000)
+    setGameHistory([])
+    setWinStreak(0)
+
     setGameState({
       deck: shuffleDeck(createDeck()),
       playerHand: [],
@@ -1178,7 +1167,6 @@ export function BlackjackGame({ onBack }: BlackjackGameProps = {}) {
         <LuxuryHeader
           balance={gameState.isDemo ? gameState.playerBalance : solBalance}
           solBalance={solBalance}
-          onSwapClick={() => setShowSwapModal(true)}
           isDemo={gameState.isDemo}
           musicEnabled={musicEnabled}
           soundEffectsEnabled={soundEffectsEnabled}
@@ -1253,20 +1241,6 @@ export function BlackjackGame({ onBack }: BlackjackGameProps = {}) {
             )}
           </div>
         </div>
-        <Dialog open={showSwapModal} onOpenChange={setShowSwapModal}>
-          <DialogContent
-            id="jupiter-terminal"
-          >
-            <button
-              onClick={() => setShowSwapModal(false)}
-              className="!mt-[-4px] w-10 h-10 text-2xl text-amber-400 hover:text-white transition-colors z-50 absolute top-0 right-0"
-              aria-label="Close"
-              type="button"
-            >
-              ×
-            </button>
-          </DialogContent>
-        </Dialog>
       </div>
       <div className="md:hidden border-t border-gray-700 bg-gray-900/20 pb-20">
         <div className="p-3">
