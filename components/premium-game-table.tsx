@@ -213,7 +213,7 @@ export function PremiumGameTable({
 
           <div className="flex gap-2 justify-center">
             {gameState.dealerHand.map((card, index) => (
-              <div key={`dealer-${index}`} className="scale-75 sm:scale-100">
+              <div key={`dealer-${index}`} className="scale-[0.9] sm:scale-100">
                 <BicycleCard card={card} index={index} isDealing={gameState.gamePhase === "dealing"} size="normal" />
               </div>
             ))}
@@ -333,7 +333,7 @@ export function PremiumGameTable({
             <>
               <div className="flex gap-2 justify-center mb-3">
                 {gameState.playerHand.map((card, index) => (
-                  <div key={`player-${index}`} className="scale-75 sm:scale-100">
+                  <div key={`player-${index}`} className="scale-[0.9] sm:scale-100">
                     <BicycleCard
                       card={card}
                       index={index}
@@ -362,7 +362,7 @@ export function PremiumGameTable({
                 <div key={`split-hand-${index}`} className="flex flex-col items-center min-w-0 flex-shrink-0">
                   <div className="flex gap-1 justify-center mb-1">
                     {hand.cards.map((card, cardIndex) => (
-                      <div key={`split-${index}-${cardIndex}`} className="scale-75">
+                      <div key={`split-${index}-${cardIndex}`} className="scale-[0.9] sm:scale-100">
                         <BicycleCard
                           card={card}
                           index={cardIndex}

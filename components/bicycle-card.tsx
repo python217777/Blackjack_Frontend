@@ -17,7 +17,7 @@ export function BicycleCard({ card, index = 0, isDealing = false, size = "normal
 
   // Optimized card dimensions for mobile - much smaller
   const cardWidth = size === "large" ? "w-[70px] sm:w-[110px]" : "w-[60px] sm:w-[100px]"
-  const cardHeight = size === "large" ? "h-[98px] sm:h-[110px]" : "h-[84px] sm:h-[100px]"
+  const cardHeight = size === "large" ? "h-[106px] sm:h-[116px]" : "h-[90px] sm:h-[104px]"
 
   // Use requestAnimationFrame for smoother animations
   useEffect(() => {
